@@ -10,6 +10,10 @@ A Slack bot framework built on Mastra that connects AI agents to Slack workspace
 
 ## Key Commands
 
+**Requirements:**
+- Node.js >= 22.13.0 (required by Mastra)
+- pnpm (package manager)
+
 ```bash
 # Development (runs Mastra dev server on port 4111)
 pnpm dev
@@ -75,6 +79,17 @@ ngrok http 4111
 └── tsconfig.json                            # TypeScript configuration
 ```
 
+## TypeScript Configuration
+
+The project uses modern TypeScript with ESM modules:
+- **Target:** ES2022 with ES2022 modules
+- **Module Resolution:** bundler (optimized for Mastra's build system)
+- **Strict Mode:** Enabled for type safety
+- **No Emit:** Mastra handles all compilation and bundling
+- **Include:** All files in `src/**/*`
+
+This configuration ensures compatibility with Mastra's bundler while maintaining strict type checking.
+
 ## Architecture
 
 ### Simplified Single-Agent Architecture (Phase 3)
@@ -135,6 +150,8 @@ Tools use `data-helpers.ts` for loading and searching JSON data.
 - Use `clearDataCache()` during development when data files change
 - Path resolution tries multiple locations (project root, .mastra/output, etc.)
 - 10-20% performance improvement on repeated queries
+- Helper functions available: `searchInText()`, `searchInObject()` for recursive JSON searching
+- `loadJsonData<T>()` provides type-safe data loading with generic support
 
 ### Slack Integration (Multi-App Pattern)
 
@@ -192,7 +209,8 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 - Intelligently selects appropriate query tools based on user questions
 - Generates responses directly without routing to other agents
 - Memory enables natural follow-up questions and contextual understanding
-- Response format: Slack-friendly with *bold*, emoji, bullet points, conversational tone
+- Response format: Concise and direct (2-4 sentences when possible), Slack-friendly with *bold*, emoji, bullet points
+- Prioritizes brevity - no fluff or unnecessary elaboration
 - Avoids heavy markdown (no headers, code blocks, or tables) for better Slack readability
 - Legacy agent files exist (`general-questions-agent.ts`, `pioneer-profile-book-agent.ts`, `session-event-grid-agent.ts`) but are not registered or used
 
@@ -346,3 +364,4 @@ Status display logic in `src/mastra/slack/status.ts` uses these states to show c
 - Data files in `data/` directory are loaded once and cached in memory by `data-helpers.ts`
 - Use `clearDataCache()` from `data-helpers.ts` when JSON files are updated during development
 - Legacy code (unused agents, tools, workflows) remains in codebase but is not registered in `src/mastra/index.ts`
+- `specs.txt` contains French-language specifications for future enhancements (not current implementation)
