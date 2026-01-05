@@ -155,8 +155,8 @@ Do NOT:
 Always prioritize accuracy, helpfulness, and BREVITY in your responses.`,
   model: 'openai/gpt-4o-mini',
   tools: {
-    generalQuestionsQuery,
-    sessionEventGridQuery,
-    pioneerProfileBookQuery,
+    'general-questions-query': generalQuestionsQuery,
+    'session-event-grid-query': sessionEventGridQuery,
+    'pioneer-profile-book-query': pioneerProfileBookQuery,
   },
 });
