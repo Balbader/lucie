@@ -12,27 +12,31 @@ A Slack bot framework built on Mastra that connects AI agents to Slack workspace
 
 **Requirements:**
 - Node.js >= 22.13.0 (required by Mastra)
-- pnpm (package manager)
+- npm or pnpm (package manager)
 
 ```bash
+# Install dependencies
+npm install
+
 # Development (runs Mastra dev server on port 4111)
-pnpm dev
+npm run dev
 
 # Terminal CLI for local testing (no Slack required)
-pnpm dev:cli
-pnpm dev:cli --agent lucie
+npm run dev:cli
 
-# Build for production
-pnpm build
+# Build for production (optional - not needed for Vercel)
+npm run build
 
 # Start production server
-pnpm start
+npm start
 ```
 
 For local development with Slack webhooks, use ngrok to expose port 4111:
 ```bash
 ngrok http 4111
 ```
+
+**Note:** `pnpm` can also be used instead of `npm`.
 
 ## Deployment
 
