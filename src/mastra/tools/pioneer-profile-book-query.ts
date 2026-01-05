@@ -46,7 +46,7 @@
 
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import { loadJsonData, searchInObject, searchInText } from './data-helpers';
+import { loadJsonData, searchInObject, searchInText } from './data-helpers.js';
 
 export const pioneerProfileBookQuery = createTool({
 	id: 'pioneer-profile-book-query',
