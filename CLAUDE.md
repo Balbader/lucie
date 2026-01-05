@@ -116,7 +116,8 @@ User → Lucie → Query Tool → Response
    - Uses OpenAI GPT-4o Mini (intelligent query understanding + response generation)
    - Intelligently chooses the appropriate query tool based on the question
    - Generates clear, user-facing responses directly
-   - Memory: last 20 messages for conversation continuity and follow-up questions
+   - Memory: last 5 messages for conversation continuity and follow-up questions
+   - Has special handling for greetings (hello, hi, hey, hola) with a welcome message
 
 2. **Query Tools** (`src/mastra/tools/`)
    - **generalQuestionsQuery**: General accelerator questions (FAQ, policies, benefits)
@@ -204,11 +205,12 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 **Agents** (`src/mastra/agents/`)
 - Currently only one active agent: Lucie (`lucie-agent.ts`)
 - Lucie uses OpenAI GPT-4o Mini (`openai/gpt-4o-mini`)
-- Has Memory with `lastMessages: 20` for full conversation context
+- Has Memory with `lastMessages: 5` for conversation context
 - Handles all Pioneer.vc accelerator queries
 - Intelligently selects appropriate query tools based on user questions
 - Generates responses directly without routing to other agents
 - Memory enables natural follow-up questions and contextual understanding
+- **Greeting Behavior:** When users say "hello", "hi", "hey", "hola", etc., Lucie responds with a specific welcome message that explains what she can help with (no tool calls)
 - Response format: Concise and direct (2-4 sentences when possible), Slack-friendly with *bold*, emoji, bullet points
 - Prioritizes brevity - no fluff or unnecessary elaboration
 - Avoids heavy markdown (no headers, code blocks, or tables) for better Slack readability
