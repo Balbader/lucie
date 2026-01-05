@@ -34,6 +34,20 @@ For local development with Slack webhooks, use ngrok to expose port 4111:
 ngrok http 4111
 ```
 
+## Deployment
+
+**Vercel Deployment:**
+The project includes a `vercel.json` configuration that specifies:
+- Build command: `pnpm build`
+- Output directory: `.mastra/output`
+- Install command: `pnpm install`
+
+When deploying to Vercel:
+1. Ensure all environment variables are set in Vercel project settings
+2. The build process will output to `.mastra/output/` directory
+3. Vercel will serve the compiled Mastra application
+4. Update Slack app Event Subscriptions URL to your Vercel domain
+
 ## Project Structure
 
 ```
@@ -76,7 +90,8 @@ ngrok http 4111
 │   └── bundler-config.mjs                   # Build configuration
 ├── mastra.db                                # SQLite database for memory
 ├── package.json                             # Dependencies and scripts
-└── tsconfig.json                            # TypeScript configuration
+├── tsconfig.json                            # TypeScript configuration
+└── vercel.json                              # Vercel deployment configuration
 ```
 
 ## TypeScript Configuration
@@ -116,7 +131,7 @@ User → Lucie → Query Tool → Response
    - Uses OpenAI GPT-4o Mini (intelligent query understanding + response generation)
    - Intelligently chooses the appropriate query tool based on the question
    - Generates clear, user-facing responses directly
-   - Memory: last 5 messages for conversation continuity and follow-up questions
+   - Memory: last 20 messages for conversation continuity and follow-up questions
    - Has special handling for greetings (hello, hi, hey, hola) with a welcome message
 
 2. **Query Tools** (`src/mastra/tools/`)
@@ -205,7 +220,7 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 **Agents** (`src/mastra/agents/`)
 - Currently only one active agent: Lucie (`lucie-agent.ts`)
 - Lucie uses OpenAI GPT-4o Mini (`openai/gpt-4o-mini`)
-- Has Memory with `lastMessages: 5` for conversation context
+- Has Memory with `lastMessages: 20` for conversation context
 - Handles all Pioneer.vc accelerator queries
 - Intelligently selects appropriate query tools based on user questions
 - Generates responses directly without routing to other agents
