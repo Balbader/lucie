@@ -873,10 +873,12 @@ const mastra = new Mastra({
   },
   // Registered workflows - available to agents via their workflows config
   workflows: {},
-  // Local SQLite storage for conversation memory and agent state
+  // Storage for conversation memory and agent state
+  // In production (Vercel), use in-memory database since filesystem is read-only
+  // In development, use local file database
   storage: new LibSQLStore({
     id: "mastra",
-    url: "file:./mastra.db"
+    url: process.env.VERCEL ? ":memory:" : "file:./mastra.db"
   }),
   // API server configuration with Slack webhook routes
   server: {
