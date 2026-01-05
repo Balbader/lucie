@@ -5,7 +5,7 @@
  * All routes defined in the Mastra server will be available at the root path.
  */
 
-import { mastra } from '../src/mastra/index';
+import { mastra } from '../src/mastra/index.js';
 
 // Get the Hono app instance
 const app = mastra.server.getApp();
