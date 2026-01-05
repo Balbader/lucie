@@ -6,29 +6,30 @@
  * and data loading for all query tools.
  *
  * Purpose:
- * - Locates project root directory dynamically
- * - Loads JSON data files from the data/ directory
+ * - Pre-loads JSON data files at module initialization for reliable access
  * - Provides type-safe data loading functions
- * - Handles file existence checks and error cases
+ * - Handles file existence checks and error cases with comprehensive logging
  *
  * Data Files:
- * - general-questions.json: General accelerator information
- * - events.json: Event data and schedules
- * - guest-events.json: Special guest events
- * - startups.json: Portfolio company information
- * - founders.json: Founder profiles
- * - workshops.json: Workshop and training data
- * - timeline.json: Program phases and milestones
+ * - general-questions.json: General accelerator information (FAQ, policies, benefits)
+ * - session_event_grid_view.json: Session and event schedule with details
+ * - pioneers_profile_book_su2025.json: Pioneer profile book data
+ *
+ * Architecture:
+ * - Pre-loads all data files at module level (not on-demand)
+ * - Optimized for Mastra Cloud and serverless deployments
+ * - Eliminates repeated file system operations
+ * - Provides detailed error logging for debugging deployment issues
  *
  * Functions:
- * - getProjectRoot(): Finds project root by locating data/ directory
- * - loadJsonData<T>(filename): Type-safe JSON file loader
+ * - loadJsonData<T>(filename): Returns pre-loaded data for known files
+ * - clearDataCache(): Reloads all data files (useful for development)
  *
  * Important Notes:
- * - Uses dynamic path resolution to find data/ directory
- * - Traverses up from current file location (max 10 levels)
- * - Validates project root by checking for known data files
+ * - Data is loaded once when module initializes
+ * - Uses multiple path resolution strategies for different deployment environments
  * - All query tools depend on this module for data access
+ * - Gracefully handles missing files with empty fallback data
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -36,52 +37,43 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 /**
- * In-memory cache for JSON data files to avoid repeated disk I/O
- * Cache persists for the lifetime of the process
+ * Pre-loaded data storage
+ * Data is loaded once at module initialization
  */
-const dataCache = new Map<string, any>();
+let generalQuestionsData: any = null;
+let sessionEventGridData: any = null;
+let pioneerProfileBookData: any = null;
 
+/**
+ * Find project root by traversing up from current file
+ */
 function getProjectRoot(): string {
-	// Get the directory of the current file
 	const currentFile = fileURLToPath(import.meta.url);
 	let currentDir = dirname(currentFile);
 
-	// Traverse up until we find the project root (where data/ directory exists)
-	// or until we've gone too far up
 	let attempts = 0;
 	const maxAttempts = 10;
 
 	while (attempts < maxAttempts) {
 		const dataPath = join(currentDir, 'data');
-		// Check if data directory exists by trying to read a known file
 		if (existsSync(join(dataPath, 'general-questions.json'))) {
 			return currentDir;
 		}
-		// Data directory not found, go up one level
 		const parentDir = dirname(currentDir);
-		if (parentDir === currentDir) {
-			// Reached filesystem root
-			break;
-		}
+		if (parentDir === currentDir) break;
 		currentDir = parentDir;
 		attempts++;
 	}
 
-	// Fallback: return process.cwd()
 	return process.cwd();
 }
 
 /**
- * Helper function to load JSON data files from the data directory
- * Uses in-memory caching to avoid repeated disk reads (10-20% performance improvement)
+ * Try to load a JSON file from multiple possible paths
  */
-export function loadJsonData<T>(filename: string): T {
-	// Check cache first
-	if (dataCache.has(filename)) {
-		return dataCache.get(filename);
-	}
+function tryLoadJsonFile(filename: string): any {
+	const projectRoot = getProjectRoot();
 
-	// Try multiple possible paths
 	const possiblePaths = [
 		// From project root (when running from source)
 		join(process.cwd(), 'data', filename),
@@ -90,38 +82,132 @@ export function loadJsonData<T>(filename: string): T {
 		// From .mastra/output with different structure
 		join(process.cwd(), '..', 'data', filename),
 		// Using project root detection
-		join(getProjectRoot(), 'data', filename),
+		join(projectRoot, 'data', filename),
+		// Mastra Cloud might use a different structure
+		join('/app', 'data', filename),
+		join('/var/task', 'data', filename),
 	];
+
+	console.log(`[data-helpers] Loading ${filename}...`);
+	console.log(`[data-helpers] Current working directory: ${process.cwd()}`);
+	console.log(`[data-helpers] Detected project root: ${projectRoot}`);
 
 	for (const filePath of possiblePaths) {
 		try {
-			const fileContent = readFileSync(filePath, 'utf-8');
-			const data = JSON.parse(fileContent);
-
-			// Cache the parsed data
-			dataCache.set(filename, data);
-
-			return data;
+			if (existsSync(filePath)) {
+				console.log(`[data-helpers] ✓ Found ${filename} at: ${filePath}`);
+				const fileContent = readFileSync(filePath, 'utf-8');
+				const data = JSON.parse(fileContent);
+				console.log(`[data-helpers] ✓ Successfully loaded ${filename} (${Object.keys(data).length} top-level keys)`);
+				return data;
+			}
 		} catch (error) {
-			// Try next path
+			console.error(`[data-helpers] ✗ Failed to load from ${filePath}:`, error);
 			continue;
 		}
 	}
 
-	// If all paths failed, throw error
-	console.error(`Error loading ${filename}: Tried paths:`, possiblePaths);
-	throw new Error(
-		`Failed to load data file: ${filename}. Checked paths: ${possiblePaths.join(
-			', ',
-		)}`,
-	);
+	console.error(`[data-helpers] ✗ Failed to load ${filename} from any path`);
+	console.error(`[data-helpers] Tried paths:`, possiblePaths);
+	return null;
 }
 
 /**
- * Clear the data cache (useful for development/testing when data files change)
+ * Initialize all data files at module load
+ */
+function initializeData(): void {
+	if (generalQuestionsData !== null) {
+		console.log('[data-helpers] Data already loaded, skipping initialization');
+		return;
+	}
+
+	console.log('[data-helpers] Initializing data files...');
+
+	// Load general-questions.json
+	try {
+		generalQuestionsData = tryLoadJsonFile('general-questions.json');
+		if (!generalQuestionsData) {
+			console.warn('[data-helpers] ⚠ Using fallback empty data for general-questions.json');
+			generalQuestionsData = { knowledge_base: {} };
+		}
+	} catch (e) {
+		console.error('[data-helpers] ✗ Error loading general-questions.json:', e);
+		generalQuestionsData = { knowledge_base: {} };
+	}
+
+	// Load session_event_grid_view.json
+	try {
+		sessionEventGridData = tryLoadJsonFile('session_event_grid_view.json');
+		if (!sessionEventGridData) {
+			console.warn('[data-helpers] ⚠ Using fallback empty array for session_event_grid_view.json');
+			sessionEventGridData = [];
+		}
+	} catch (e) {
+		console.error('[data-helpers] ✗ Error loading session_event_grid_view.json:', e);
+		sessionEventGridData = [];
+	}
+
+	// Load pioneers_profile_book_su2025.json
+	try {
+		pioneerProfileBookData = tryLoadJsonFile('pioneers_profile_book_su2025.json');
+		if (!pioneerProfileBookData) {
+			console.warn('[data-helpers] ⚠ Using fallback empty array for pioneers_profile_book_su2025.json');
+			pioneerProfileBookData = [];
+		}
+	} catch (e) {
+		console.error('[data-helpers] ✗ Error loading pioneers_profile_book_su2025.json:', e);
+		pioneerProfileBookData = [];
+	}
+
+	console.log('[data-helpers] ✓ Data initialization complete');
+}
+
+// Initialize data on module load
+initializeData();
+
+/**
+ * Helper function to load JSON data files from the data directory
+ * Returns pre-loaded data for known files
+ */
+export function loadJsonData<T>(filename: string): T {
+	if (filename === 'general-questions.json') {
+		if (generalQuestionsData === null) {
+			console.error('[data-helpers] ✗ general-questions.json not loaded!');
+			throw new Error('Failed to load general-questions.json - data not initialized');
+		}
+		return generalQuestionsData;
+	}
+
+	if (filename === 'session_event_grid_view.json') {
+		if (sessionEventGridData === null) {
+			console.error('[data-helpers] ✗ session_event_grid_view.json not loaded!');
+			throw new Error('Failed to load session_event_grid_view.json - data not initialized');
+		}
+		return sessionEventGridData;
+	}
+
+	if (filename === 'pioneers_profile_book_su2025.json') {
+		if (pioneerProfileBookData === null) {
+			console.error('[data-helpers] ✗ pioneers_profile_book_su2025.json not loaded!');
+			throw new Error('Failed to load pioneers_profile_book_su2025.json - data not initialized');
+		}
+		return pioneerProfileBookData;
+	}
+
+	console.error(`[data-helpers] ✗ Unknown data file requested: ${filename}`);
+	throw new Error(`Unknown data file: ${filename}`);
+}
+
+/**
+ * Clear the data cache and reload all files
+ * Useful for development/testing when data files change
  */
 export function clearDataCache(): void {
-	dataCache.clear();
+	console.log('[data-helpers] Clearing data cache and reloading...');
+	generalQuestionsData = null;
+	sessionEventGridData = null;
+	pioneerProfileBookData = null;
+	initializeData();
 }
 
 /**

@@ -40,8 +40,37 @@ ngrok http 4111
 
 ## Deployment
 
-**Vercel Deployment:**
-The project is configured for Vercel serverless deployment:
+### Mastra Cloud Deployment (Recommended)
+
+The project is optimized for Mastra Cloud deployment:
+
+**Setup:**
+1. Push code to your Git repository (GitHub, GitLab, etc.)
+2. Connect repository to Mastra Cloud
+3. Configure environment variables in Mastra Cloud project settings:
+   - `OPENAI_API_KEY`
+   - `SLACK_BOT_TOKEN`
+   - `SLACK_SIGNING_SECRET`
+4. Deploy - Mastra Cloud will automatically build and deploy your application
+5. After deployment, update Slack app Event Subscriptions URL to your Mastra Cloud endpoint
+
+**Data Files:**
+- JSON data files in `data/` directory are pre-loaded at module initialization
+- `data-helpers.ts` includes comprehensive logging to debug file path issues
+- Supports multiple path resolution strategies for different deployment environments
+- Check Mastra Cloud logs for `[data-helpers]` prefixed messages to verify data loading
+
+**Important:**
+- Data files must be included in the deployment bundle (Mastra Cloud handles this automatically)
+- Pre-loading at module level eliminates runtime file path issues
+- Check logs during deployment to verify all three data files load successfully:
+  - `general-questions.json`
+  - `session_event_grid_view.json`
+  - `pioneers_profile_book_su2025.json`
+
+### Vercel Deployment (Alternative)
+
+The project can also be deployed to Vercel:
 - `api/index.ts`: Vercel serverless function that manually creates a Hono app and registers Slack routes
   - Uses Hono's Vercel adapter (`handle`) to export as serverless function
   - Imports `slackRoutes` and registers them with the mastra instance
@@ -180,12 +209,13 @@ Data is stored in JSON files under `data/`:
 Tools use `data-helpers.ts` for loading and searching JSON data.
 
 **Data Loading Optimization:**
-- In-memory caching via `Map<string, any>` in `data-helpers.ts` eliminates repeated disk reads
-- JSON files loaded once per process lifetime on first access
-- Cache persists across multiple queries
-- Use `clearDataCache()` during development when data files change
-- Path resolution tries multiple locations (project root, .mastra/output, etc.)
-- 10-20% performance improvement on repeated queries
+- **Pre-loading at module level:** All JSON files are loaded once when `data-helpers.ts` module initializes
+- Eliminates repeated disk reads and runtime file path resolution issues
+- Optimized for Mastra Cloud and serverless deployments
+- Comprehensive logging with `[data-helpers]` prefix for debugging deployment issues
+- Path resolution tries multiple locations (project root, .mastra/output, /app, /var/task, etc.)
+- Graceful fallback to empty data structures if files are not found
+- Use `clearDataCache()` during development when data files change (reloads all files)
 - Helper functions available: `searchInText()`, `searchInObject()` for recursive JSON searching
 - `loadJsonData<T>()` provides type-safe data loading with generic support
 
@@ -366,10 +396,12 @@ Status display logic in `src/mastra/slack/status.ts` uses these states to show c
 - Located in `src/mastra/terminal/cli.ts`
 
 **Data Cache Management:**
-- JSON data files are cached in memory on first load
-- Cache persists for process lifetime
+- JSON data files are pre-loaded once at module initialization (not on first access)
+- Data persists for process lifetime
 - During development, restart the server to reload changed data files
-- Or call `clearDataCache()` from `data-helpers.ts` programmatically
+- Or call `clearDataCache()` from `data-helpers.ts` programmatically to force reload
+- Check console logs for `[data-helpers]` messages to verify successful data loading
+- If data files fail to load, tools will use empty fallback structures and log warnings
 
 **Build Process:**
 - `pnpm dev` runs Mastra dev server with hot reload on port 4111
@@ -398,7 +430,8 @@ Status display logic in `src/mastra/slack/status.ts` uses these states to show c
   - Memory enables natural follow-up questions and contextual understanding
   - No routing layer - Lucie intelligently chooses the right query tool
   - 1 LLM call per query (85-90% faster than original architecture)
-- Data files in `data/` directory are loaded once and cached in memory by `data-helpers.ts`
+- Data files in `data/` directory are pre-loaded at module initialization by `data-helpers.ts`
 - Use `clearDataCache()` from `data-helpers.ts` when JSON files are updated during development
+- Check logs for `[data-helpers]` messages to debug data loading issues in deployed environments
 - Legacy code (unused agents, tools, workflows) remains in codebase but is not registered in `src/mastra/index.ts`
 - `specs.txt` contains French-language specifications for future enhancements (not current implementation)
