@@ -31,7 +31,6 @@ import { Mastra } from '@mastra/core/mastra';
 import { LibSQLStore } from '@mastra/libsql';
 import { lucie } from './agents/lucie-agent';
 import { slackRoutes } from './slack/routes';
-import { VercelDeployer } from '@mastra/deployer-vercel';
 
 export const mastra = new Mastra({
   // Registered agents - keys must match agentName in slack/routes.ts

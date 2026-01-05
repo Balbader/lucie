@@ -38,9 +38,9 @@ ngrok http 4111
 
 **Vercel Deployment:**
 The project is configured for Vercel serverless deployment:
-- `api/index.ts`: Vercel serverless function entry point that exports the Mastra server
-- `vercel.json`: Configures build commands and rewrites all routes to `/api`
-- Build command: `pnpm build` (builds Mastra app to `.mastra/output/`)
+- `api/index.ts`: Vercel serverless function entry point that exports the Mastra server's fetch handler
+- `vercel.json`: Configures rewrites to route all requests to the `/api` serverless function
+- Vercel automatically compiles TypeScript and bundles dependencies for the serverless function
 
 When deploying to Vercel:
 1. Push code to your Git repository (GitHub, GitLab, etc.)
@@ -49,10 +49,13 @@ When deploying to Vercel:
    - `OPENAI_API_KEY`
    - `SLACK_BOT_TOKEN`
    - `SLACK_SIGNING_SECRET`
-4. Deploy - Vercel will automatically run `pnpm build`
+4. Deploy - Vercel will automatically detect and build the `api/` directory as a serverless function
 5. After deployment, update Slack app Event Subscriptions URL to `https://your-app.vercel.app/slack/lucie/events`
 
-**Important:** The `api/index.ts` file exports the Mastra server as a Vercel serverless function, and all routes are rewritten to go through this function.
+**Important:**
+- The `api/index.ts` exports `mastra.server.getApp().fetch` which is compatible with Vercel's Web Standard API
+- All routes are rewritten to go through the serverless function
+- Vercel handles compilation and bundling automatically - no custom build command needed
 
 ## Project Structure
 

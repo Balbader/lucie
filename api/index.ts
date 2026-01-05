@@ -7,4 +7,5 @@
 
 import { mastra } from '../src/mastra/index';
 
-export default mastra.server.getApp();
+// Export the Hono app as a Vercel serverless function handler
+export default mastra.server.getApp().fetch;
