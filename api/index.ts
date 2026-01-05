@@ -13,13 +13,20 @@ import { slackRoutes } from '../src/mastra/slack/routes.js';
 // Create a Hono app with the Slack routes
 const app = new Hono();
 
+// Add middleware to inject mastra into context
+app.use('*', async (c, next) => {
+  c.set('mastra', mastra as any);
+  await next();
+});
+
 // Register all Slack routes
 for (const route of slackRoutes) {
   const method = route.method.toLowerCase() as 'get' | 'post' | 'put' | 'delete' | 'patch';
-  app[method](route.path, async (c) => {
-    c.set('mastra', mastra);
-    return route.handler(c);
-  });
+
+  // slackRoutes uses 'handler' property (not 'createHandler')
+  // Cast to any to bypass TypeScript union type checking
+  const apiRoute = route as any;
+  app[method](route.path, apiRoute.handler);
 }
 
 // Export as Vercel handler
