@@ -67,7 +67,17 @@ export const generalQuestionsQuery = createTool({
 		found: z.boolean().describe('Whether matching answers were found'),
 	}),
 	execute: async ({ query }) => {
+		console.log(`[general-questions-query] Executing with query: "${query}"`);
+
 		const data = loadJsonData('general-questions.json');
+
+		if (!data) {
+			console.error('[general-questions-query] ✗ Data is null or undefined');
+			return { answers: [], found: false };
+		}
+
+		console.log(`[general-questions-query] Data loaded, structure:`, Object.keys(data));
+
 		const results: Array<{
 			question: string;
 			answer: string;
@@ -122,6 +132,8 @@ export const generalQuestionsQuery = createTool({
 		if (isAllQuery) {
 			log('Query type: All questions (broad query)', query);
 		}
+
+		console.log(`[general-questions-query] Returning ${finalResults.length} results (found: ${results.length > 0})`);
 
 		return {
 			answers: finalResults,

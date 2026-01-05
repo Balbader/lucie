@@ -91,8 +91,18 @@ export const sessionEventGridQuery = createTool({
 			.describe('Additional metadata about the query results'),
 	}),
 	execute: async ({ query }) => {
+		console.log(`[session-event-grid-query] Executing with query: "${query}"`);
+
 		const data = loadJsonData('session_event_grid_view.json');
+
+		if (!data) {
+			console.error('[session-event-grid-query] ✗ Data is null or undefined');
+			return { sessions: [], found: false };
+		}
+
 		const allSessions = Array.isArray(data) ? data : [];
+		console.log(`[session-event-grid-query] Data loaded: ${allSessions.length} sessions`);
+
 		const queryLower = query.toLowerCase();
 
 		// Detect query type
@@ -247,6 +257,8 @@ export const sessionEventGridQuery = createTool({
 		}
 
 		const finalResults = results.slice(0, 50); // Limit to top 50 results
+
+		console.log(`[session-event-grid-query] Returning ${finalResults.length} results (found: ${results.length > 0})`);
 
 		return {
 			sessions: finalResults,

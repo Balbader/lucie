@@ -91,8 +91,18 @@ export const pioneerProfileBookQuery = createTool({
 			.describe('Additional metadata about the query results'),
 	}),
 	execute: async ({ query }) => {
+		console.log(`[pioneer-profile-book-query] Executing with query: "${query}"`);
+
 		const data = loadJsonData('pioneers_profile_book_su2025.json');
+
+		if (!data) {
+			console.error('[pioneer-profile-book-query] ✗ Data is null or undefined');
+			return { pioneers: [], found: false };
+		}
+
 		const allPioneers = Array.isArray(data) ? data : [];
+		console.log(`[pioneer-profile-book-query] Data loaded: ${allPioneers.length} pioneers`);
+
 		const queryLower = query.toLowerCase();
 
 		// Detect query type
@@ -342,6 +352,8 @@ export const pioneerProfileBookQuery = createTool({
 		}
 
 		const finalResults = results.slice(0, 50); // Limit to top 50 results
+
+		console.log(`[pioneer-profile-book-query] Returning ${finalResults.length} results (found: ${results.length > 0})`);
 
 		return {
 			pioneers: finalResults,
