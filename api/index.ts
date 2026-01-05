@@ -8,7 +8,7 @@
 import { mastra } from '../src/mastra/index.js';
 
 // Get the Hono app instance
-const app = mastra.server.getApp();
+const app = mastra.getApp();
 
 // Export handler compatible with Vercel's Web Standard API
 export default async (req: Request) => {
