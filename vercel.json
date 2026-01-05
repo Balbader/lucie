@@ -1,6 +1,11 @@
 {
   "buildCommand": "mkdir -p public && touch public/.gitkeep",
   "outputDirectory": "public",
+  "functions": {
+    "api/**/*.ts": {
+      "includeFiles": "{src,data}/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",

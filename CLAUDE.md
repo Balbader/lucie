@@ -43,7 +43,8 @@ ngrok http 4111
 **Vercel Deployment:**
 The project is configured for Vercel serverless deployment:
 - `api/index.ts`: Vercel serverless function entry point that exports the Mastra server's fetch handler
-- `vercel.json`: Configures build to create empty `public/` directory and rewrites all requests to `/api`
+- `vercel.json`: Configures build, includes source files, and rewrites all requests to `/api`
+  - `includeFiles`: Ensures `src/` and `data/` directories are bundled with the serverless function
 - `public/`: Empty directory required by Vercel (contains only `.gitkeep`)
 - Vercel automatically compiles TypeScript and bundles dependencies for the serverless function
 
