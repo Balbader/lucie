@@ -53,8 +53,6 @@ export const mastra = new Mastra({
     apiRoutes: slackRoutes,
   },
 
-  deployer: new VercelDeployer(),
-
   // Bundler configuration to prevent module resolution issues
   bundler: {
     externals: ['supports-color'],
