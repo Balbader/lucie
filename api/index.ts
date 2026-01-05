@@ -5,23 +5,22 @@
  * All routes defined in the Mastra server will be available at the root path.
  */
 
+import { Hono } from 'hono';
+import { handle } from 'hono/vercel';
 import { mastra } from '../src/mastra/index.js';
+import { slackRoutes } from '../src/mastra/slack/routes.js';
 
-// Get the Hono app instance
-const app = mastra.getApp();
+// Create a Hono app with the Slack routes
+const app = new Hono();
 
-// Export handler compatible with Vercel's Web Standard API
-export default async (req: Request) => {
-  try {
-    return await app.fetch(req);
-  } catch (error) {
-    console.error('Serverless function error:', error);
-    return new Response(JSON.stringify({
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-};
+// Register all Slack routes
+for (const route of slackRoutes) {
+  const method = route.method.toLowerCase() as 'get' | 'post' | 'put' | 'delete' | 'patch';
+  app[method](route.path, async (c) => {
+    c.set('mastra', mastra);
+    return route.handler(c);
+  });
+}
+
+// Export as Vercel handler
+export default handle(app);

@@ -42,7 +42,9 @@ ngrok http 4111
 
 **Vercel Deployment:**
 The project is configured for Vercel serverless deployment:
-- `api/index.ts`: Vercel serverless function entry point that exports the Mastra server's fetch handler
+- `api/index.ts`: Vercel serverless function that manually creates a Hono app and registers Slack routes
+  - Uses Hono's Vercel adapter (`handle`) to export as serverless function
+  - Imports `slackRoutes` and registers them with the mastra instance
 - `vercel.json`: Configures build, includes source files, and rewrites all requests to `/api`
   - `includeFiles`: Ensures `src/` and `data/` directories are bundled with the serverless function
 - `public/`: Empty directory required by Vercel (contains only `.gitkeep`)
