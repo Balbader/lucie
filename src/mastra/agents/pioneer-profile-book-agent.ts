@@ -40,7 +40,7 @@ Response Guidelines:
 - Be concise but thorough
 
 Do NOT call any other tools or agents - generate your final response directly after using the pioneer-profile-book-query tool.`,
-	model: 'openai/gpt-5-nano',
+	model: 'openai/gpt-4.1',
 	tools: {
 		pioneerProfileBookQuery,
 	},

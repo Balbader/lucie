@@ -113,7 +113,7 @@ User → Lucie → Query Tool → Response
 
 1. **Lucie Agent** (`src/mastra/agents/lucie-agent.ts`)
    - Single entry point for all user queries via Slack
-   - Uses Claude Sonnet 4 (intelligent query understanding + response generation)
+   - Uses OpenAI GPT-4o Mini (intelligent query understanding + response generation)
    - Intelligently chooses the appropriate query tool based on the question
    - Generates clear, user-facing responses directly
    - Memory: last 20 messages for conversation continuity and follow-up questions
@@ -126,7 +126,7 @@ User → Lucie → Query Tool → Response
    - Returns data with `found` flag and optional metadata
    - Fast, efficient, no LLM calls
 
-**Key Pattern:** Single agent with multiple specialized tools - Sonnet 4 intelligently selects the right tool and formats responses.
+**Key Pattern:** Single agent with multiple specialized tools - GPT-4o Mini intelligently selects the right tool and formats responses.
 
 **Performance:**
 - Before Phase 1: 5-7 LLM calls per query (~8-12 seconds)
@@ -203,7 +203,7 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 
 **Agents** (`src/mastra/agents/`)
 - Currently only one active agent: Lucie (`lucie-agent.ts`)
-- Lucie uses Claude Sonnet 4 (`anthropic/claude-sonnet-4-20250514`)
+- Lucie uses OpenAI GPT-4o Mini (`openai/gpt-4o-mini`)
 - Has Memory with `lastMessages: 20` for full conversation context
 - Handles all Pioneer.vc accelerator queries
 - Intelligently selects appropriate query tools based on user questions
@@ -238,15 +238,13 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 
 Required for Lucie agent:
 ```bash
-# Anthropic API key for Claude Sonnet 4 (used by Lucie agent)
-ANTHROPIC_API_KEY=sk-ant-...
+# OpenAI API key for GPT-4o Mini (used by Lucie agent)
+OPENAI_API_KEY=sk-proj-...
 
 # Slack credentials for Lucie bot
 SLACK_BOT_TOKEN=xoxb-...
 SLACK_SIGNING_SECRET=...
 ```
-
-**Note:** The code references `OPENAI_API_KEY` in some places but Lucie agent uses `anthropic/claude-sonnet-4-20250514` which requires `ANTHROPIC_API_KEY`.
 
 For multiple apps, use naming convention: `SLACK_{APP_NAME}_BOT_TOKEN` (uppercase snake_case)
 

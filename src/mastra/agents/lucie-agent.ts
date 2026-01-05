@@ -18,7 +18,7 @@
  * - Single agent architecture (removes routing layer)
  * - Direct tool usage (no specialized agents)
  * - 1 LLM call per query (70-80% faster than Phase 2)
- * - Uses Claude Sonnet 4 for intelligent query understanding and response generation
+ * - Uses OpenAI GPT-4o Mini for intelligent query understanding and response generation
  * - Maintains last 20 messages for conversation continuity
  *
  * Available Query Tools:
@@ -134,7 +134,7 @@ Do NOT:
 - Add unnecessary context or explanations unless explicitly asked
 
 Always prioritize accuracy, helpfulness, and BREVITY in your responses.`,
-  model: 'openai/gpt-5-nano',
+  model: 'openai/gpt-4.1',
   tools: {
     generalQuestionsQuery,
     sessionEventGridQuery,
@@ -142,7 +142,7 @@ Always prioritize accuracy, helpfulness, and BREVITY in your responses.`,
   },
   memory: new Memory({
     options: {
-      lastMessages: 20,
+      lastMessages: 5,
     },
   }),
 });
