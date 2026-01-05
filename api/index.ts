@@ -10,12 +10,19 @@ import { handle } from 'hono/vercel';
 import { mastra } from '../src/mastra/index.js';
 import { slackRoutes } from '../src/mastra/slack/routes.js';
 
+// Define Hono environment with mastra in variables
+type Env = {
+  Variables: {
+    mastra: typeof mastra;
+  };
+};
+
 // Create a Hono app with the Slack routes
-const app = new Hono();
+const app = new Hono<Env>();
 
 // Add middleware to inject mastra into context
 app.use('*', async (c, next) => {
-  c.set('mastra', mastra as any);
+  c.set('mastra', mastra);
   await next();
 });
 
