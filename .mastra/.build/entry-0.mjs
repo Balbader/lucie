@@ -1,7 +1,8 @@
-import { scoreTraces, scoreTracesWorkflow } from '@mastra/core/evals/scoreTraces';
+import { handle } from 'hono/vercel';
 import { Mastra } from '@mastra/core/mastra';
 import { LibSQLStore } from '@mastra/libsql';
 import { Agent, MessageList, isSupportedLanguageModel, tryGenerateWithJsonFallback, tryStreamWithJsonFallback } from '@mastra/core/agent';
+import { Memory as Memory$1 } from '@mastra/memory';
 import { createTool, isVercelTool, Tool } from '@mastra/core/tools';
 import z$1, { z, ZodOptional, ZodNullable, ZodArray, ZodRecord, ZodObject, ZodFirstPartyTypeKind } from 'zod';
 import { existsSync, readFileSync, lstatSync, createReadStream } from 'fs';
@@ -23,6 +24,7 @@ import { zodToJsonSchema as zodToJsonSchema$1 } from '@mastra/core/utils/zod-to-
 import { MastraError, ErrorDomain, ErrorCategory } from '@mastra/core/error';
 import { generateEmptyFromSchema } from '@mastra/core/utils';
 import { listScoresResponseSchema } from '@mastra/core/evals';
+import { scoreTraces, scoreTracesWorkflow } from '@mastra/core/evals/scoreTraces';
 import { dateRangeSchema, tracesFilterSchema, paginationArgsSchema, tracesOrderBySchema, listTracesResponseSchema, getTraceResponseSchema, getTraceArgsSchema, scoreTracesResponseSchema, scoreTracesRequestSchema, spanIdsSchema } from '@mastra/core/storage';
 import { MastraA2AError } from '@mastra/core/a2a';
 import { TransformStream as TransformStream$1, ReadableStream as ReadableStream$1 } from 'stream/web';
@@ -469,6 +471,11 @@ const lucie = new Agent({
   id: "lucie-agent",
   name: "lucie-agent",
   description: "Lucie is the Pioneers Program Manager",
+  memory: new Memory$1({
+    options: {
+      lastMessages: 20
+    }
+  }),
   instructions: `You are Lucie, the Pioneers Program Manager.
 
 Your job is to answer user questions about the Pioneers accelerator by using the appropriate query tool and generating clear, helpful responses.
@@ -49187,14 +49194,19 @@ async function createNodeServer(mastra, options = { tools: {} }) {
   return server;
 }
 
-// @ts-ignore
-    await createNodeServer(mastra, { tools: getToolExports(tools), playground: false });
+if (mastra.getStorage()) {
+  mastra.__registerInternalWorkflow(scoreTracesWorkflow);
+}
 
-    if (mastra.getStorage()) {
-      // start storage init in the background
-      mastra.getStorage().init();
-      mastra.__registerInternalWorkflow(scoreTracesWorkflow);
-    }
+const app = await createHonoServer(mastra, { tools: getToolExports(tools) });
+
+const GET = handle(app);
+const POST = handle(app);
+const PUT = handle(app);
+const DELETE = handle(app);
+const PATCH = handle(app);
+const OPTIONS = handle(app);
+const HEAD = handle(app);
 
 // ../memory/dist/chunk-WC4XBMZT.js
 var require_token_io$2 = __commonJS({
@@ -53910,3 +53922,5 @@ var token6GSAFR2WKVDFAJ2MVW443KIA = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	default: token6GSAFR2W
 });
+
+export { DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT };

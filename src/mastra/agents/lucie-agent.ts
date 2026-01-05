@@ -28,6 +28,7 @@
  */
 
 import { Agent } from '@mastra/core/agent';
+import { Memory } from '@mastra/memory';
 import { generalQuestionsQuery } from '../tools/general-questions-query.js';
 import { sessionEventGridQuery } from '../tools/session-event-grid-query.js';
 import { pioneerProfileBookQuery } from '../tools/pioneer-profile-book-query.js';
@@ -36,6 +37,11 @@ export const lucie = new Agent({
   id: 'lucie-agent',
   name: 'lucie-agent',
   description: 'Lucie is the Pioneers Program Manager',
+  memory: new Memory({
+    options: {
+      lastMessages: 20,
+    },
+  }),
   instructions: `You are Lucie, the Pioneers Program Manager.
 
 Your job is to answer user questions about the Pioneers accelerator by using the appropriate query tool and generating clear, helpful responses.

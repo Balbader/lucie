@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@mastra/core": "beta",
+    "@mastra/deployer-vercel": "^1.0.0-beta.1",
     "@mastra/libsql": "beta",
     "@mastra/loggers": "1.0.0-beta.3",
     "@mastra/memory": "beta",
