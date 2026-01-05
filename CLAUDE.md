@@ -37,20 +37,28 @@ ngrok http 4111
 ## Deployment
 
 **Vercel Deployment:**
-The project includes a `vercel.json` configuration that specifies:
-- Build command: `pnpm build`
-- Output directory: `.mastra/output`
-- Install command: `pnpm install`
+The project is configured for Vercel serverless deployment:
+- `api/index.ts`: Vercel serverless function entry point that exports the Mastra server
+- `vercel.json`: Configures build commands and rewrites all routes to `/api`
+- Build command: `pnpm build` (builds Mastra app to `.mastra/output/`)
 
 When deploying to Vercel:
-1. Ensure all environment variables are set in Vercel project settings
-2. The build process will output to `.mastra/output/` directory
-3. Vercel will serve the compiled Mastra application
-4. Update Slack app Event Subscriptions URL to your Vercel domain
+1. Push code to your Git repository (GitHub, GitLab, etc.)
+2. Connect repository to Vercel
+3. Configure environment variables in Vercel project settings:
+   - `OPENAI_API_KEY`
+   - `SLACK_BOT_TOKEN`
+   - `SLACK_SIGNING_SECRET`
+4. Deploy - Vercel will automatically run `pnpm build`
+5. After deployment, update Slack app Event Subscriptions URL to `https://your-app.vercel.app/slack/lucie/events`
+
+**Important:** The `api/index.ts` file exports the Mastra server as a Vercel serverless function, and all routes are rewritten to go through this function.
 
 ## Project Structure
 
 ```
+├── api/
+│   └── index.ts                             # Vercel serverless function entry
 ├── data/                                    # JSON knowledge base files
 │   ├── general-questions.json               # FAQ data
 │   ├── session_event_grid_view.json         # Events/sessions data
