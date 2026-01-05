@@ -2,7 +2,6 @@ import { scoreTraces, scoreTracesWorkflow } from '@mastra/core/evals/scoreTraces
 import { Mastra } from '@mastra/core/mastra';
 import { LibSQLStore } from '@mastra/libsql';
 import { Agent, MessageList, isSupportedLanguageModel, tryGenerateWithJsonFallback, tryStreamWithJsonFallback } from '@mastra/core/agent';
-import { Memory as Memory$1 } from '@mastra/memory';
 import { createTool, isVercelTool, Tool } from '@mastra/core/tools';
 import z$1, { z, ZodOptional, ZodNullable, ZodArray, ZodRecord, ZodObject, ZodFirstPartyTypeKind } from 'zod';
 import { existsSync, readFileSync, lstatSync, createReadStream } from 'fs';
@@ -586,12 +585,7 @@ Always prioritize accuracy, helpfulness, and BREVITY in your responses.`,
     generalQuestionsQuery,
     sessionEventGridQuery,
     pioneerProfileBookQuery
-  },
-  memory: new Memory$1({
-    options: {
-      lastMessages: 5
-    }
-  })
+  }
 });
 
 "use strict";
