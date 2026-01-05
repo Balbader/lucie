@@ -10,6 +10,10 @@ A Slack bot framework built on Mastra that connects AI agents to Slack workspace
 
 ## Key Commands
 
+**Requirements:**
+- Node.js >= 22.13.0 (required by Mastra)
+- pnpm (package manager)
+
 ```bash
 # Development (runs Mastra dev server on port 4111)
 pnpm dev
@@ -75,6 +79,17 @@ ngrok http 4111
 └── tsconfig.json                            # TypeScript configuration
 ```
 
+## TypeScript Configuration
+
+The project uses modern TypeScript with ESM modules:
+- **Target:** ES2022 with ES2022 modules
+- **Module Resolution:** bundler (optimized for Mastra's build system)
+- **Strict Mode:** Enabled for type safety
+- **No Emit:** Mastra handles all compilation and bundling
+- **Include:** All files in `src/**/*`
+
+This configuration ensures compatibility with Mastra's bundler while maintaining strict type checking.
+
 ## Architecture
 
 ### Simplified Single-Agent Architecture (Phase 3)
@@ -98,10 +113,11 @@ User → Lucie → Query Tool → Response
 
 1. **Lucie Agent** (`src/mastra/agents/lucie-agent.ts`)
    - Single entry point for all user queries via Slack
-   - Uses Claude Sonnet 4 (intelligent query understanding + response generation)
+   - Uses OpenAI GPT-4o Mini (intelligent query understanding + response generation)
    - Intelligently chooses the appropriate query tool based on the question
    - Generates clear, user-facing responses directly
-   - Memory: last 20 messages for conversation continuity and follow-up questions
+   - Memory: last 5 messages for conversation continuity and follow-up questions
+   - Has special handling for greetings (hello, hi, hey, hola) with a welcome message
 
 2. **Query Tools** (`src/mastra/tools/`)
    - **generalQuestionsQuery**: General accelerator questions (FAQ, policies, benefits)
@@ -111,7 +127,7 @@ User → Lucie → Query Tool → Response
    - Returns data with `found` flag and optional metadata
    - Fast, efficient, no LLM calls
 
-**Key Pattern:** Single agent with multiple specialized tools - Sonnet 4 intelligently selects the right tool and formats responses.
+**Key Pattern:** Single agent with multiple specialized tools - GPT-4o Mini intelligently selects the right tool and formats responses.
 
 **Performance:**
 - Before Phase 1: 5-7 LLM calls per query (~8-12 seconds)
@@ -135,6 +151,8 @@ Tools use `data-helpers.ts` for loading and searching JSON data.
 - Use `clearDataCache()` during development when data files change
 - Path resolution tries multiple locations (project root, .mastra/output, etc.)
 - 10-20% performance improvement on repeated queries
+- Helper functions available: `searchInText()`, `searchInObject()` for recursive JSON searching
+- `loadJsonData<T>()` provides type-safe data loading with generic support
 
 ### Slack Integration (Multi-App Pattern)
 
@@ -186,13 +204,15 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 
 **Agents** (`src/mastra/agents/`)
 - Currently only one active agent: Lucie (`lucie-agent.ts`)
-- Lucie uses Claude Sonnet 4 (`anthropic/claude-sonnet-4-20250514`)
-- Has Memory with `lastMessages: 20` for full conversation context
+- Lucie uses OpenAI GPT-4o Mini (`openai/gpt-4o-mini`)
+- Has Memory with `lastMessages: 5` for conversation context
 - Handles all Pioneer.vc accelerator queries
 - Intelligently selects appropriate query tools based on user questions
 - Generates responses directly without routing to other agents
 - Memory enables natural follow-up questions and contextual understanding
-- Response format: Slack-friendly with *bold*, emoji, bullet points, conversational tone
+- **Greeting Behavior:** When users say "hello", "hi", "hey", "hola", etc., Lucie responds with a specific welcome message that explains what she can help with (no tool calls)
+- Response format: Concise and direct (2-4 sentences when possible), Slack-friendly with *bold*, emoji, bullet points
+- Prioritizes brevity - no fluff or unnecessary elaboration
 - Avoids heavy markdown (no headers, code blocks, or tables) for better Slack readability
 - Legacy agent files exist (`general-questions-agent.ts`, `pioneer-profile-book-agent.ts`, `session-event-grid-agent.ts`) but are not registered or used
 
@@ -220,15 +240,13 @@ Slack message → /slack/lucie/events → lucie agent → streaming response
 
 Required for Lucie agent:
 ```bash
-# Anthropic API key for Claude Sonnet 4 (used by Lucie agent)
-ANTHROPIC_API_KEY=sk-ant-...
+# OpenAI API key for GPT-4o Mini (used by Lucie agent)
+OPENAI_API_KEY=sk-proj-...
 
 # Slack credentials for Lucie bot
 SLACK_BOT_TOKEN=xoxb-...
 SLACK_SIGNING_SECRET=...
 ```
-
-**Note:** The code references `OPENAI_API_KEY` in some places but Lucie agent uses `anthropic/claude-sonnet-4-20250514` which requires `ANTHROPIC_API_KEY`.
 
 For multiple apps, use naming convention: `SLACK_{APP_NAME}_BOT_TOKEN` (uppercase snake_case)
 
@@ -346,3 +364,4 @@ Status display logic in `src/mastra/slack/status.ts` uses these states to show c
 - Data files in `data/` directory are loaded once and cached in memory by `data-helpers.ts`
 - Use `clearDataCache()` from `data-helpers.ts` when JSON files are updated during development
 - Legacy code (unused agents, tools, workflows) remains in codebase but is not registered in `src/mastra/index.ts`
+- `specs.txt` contains French-language specifications for future enhancements (not current implementation)

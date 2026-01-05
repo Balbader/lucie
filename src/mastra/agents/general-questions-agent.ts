@@ -21,11 +21,11 @@ import { Memory } from '@mastra/memory';
 import { generalQuestionsQuery } from '../tools/general-questions-query';
 
 export const generalQuestionsAgent = new Agent({
-	id: 'general-questions-agent',
-	name: 'general-questions-agent',
-	description:
-		'General Questions Agent is responsible for answering general questions',
-	instructions: `You are a general questions agent for the Pioneer.vc accelerator program. You handle general questions about the program that don't fit into specific categories like events, startups, or founders.
+  id: 'general-questions-agent',
+  name: 'general-questions-agent',
+  description:
+    'General Questions Agent is responsible for answering general questions',
+  instructions: `You are a general questions agent for the Pioneer.vc accelerator program. You handle general questions about the program that don't fit into specific categories like events, startups, or founders.
 
 When you receive a query:
 1. Use the general-questions-query tool with the user's question to search the knowledge base
@@ -41,13 +41,13 @@ Response Guidelines:
 - Be concise but thorough
 
 Do NOT call any other tools or agents - generate your final response directly after using the general-questions-query tool.`,
-	model: 'anthropic/claude-3-5-haiku-20241022',
-	tools: {
-		generalQuestionsQuery,
-	},
-	memory: new Memory({
-		options: {
-			lastMessages: 10,
-		},
-	}),
+  model: 'openai/gpt-4.1',
+  tools: {
+    generalQuestionsQuery,
+  },
+  memory: new Memory({
+    options: {
+      lastMessages: 10,
+    },
+  }),
 });

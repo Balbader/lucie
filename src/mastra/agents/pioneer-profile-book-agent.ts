@@ -40,7 +40,7 @@ Response Guidelines:
 - Be concise but thorough
 
 Do NOT call any other tools or agents - generate your final response directly after using the pioneer-profile-book-query tool.`,
-	model: 'anthropic/claude-3-5-haiku-20241022',
+	model: 'openai/gpt-4.1',
 	tools: {
 		pioneerProfileBookQuery,
 	},

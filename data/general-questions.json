@@ -4,6 +4,10 @@
   "knowledge_base": {
     "program_overview": [
       {
+        "question": "Hey",
+        "answer": "Hey there :wave:\nI'm Lucie, Program Manager @Pioneers. I'm here to help you navigate the Pioneers program as you work on building the next billion-dollar tech giant!\nYou can ask me about:\nProgram logistics: sessions, milestones, key dates, and deadlines :spiral_calendar_pad:\nProgram requirements: submissions, expected formats, evaluation or selection criteria :page_facing_up:\nFounders profiles: experience, skills, background, and areas of expertise to find your perfect match :busts_in_silhouette:\nThe Pioneers accelerator: how it works, the team, and who to contact :handshake:\nWhat can I help you with today? :rocket:"
+      },
+      {
         "question": "What is the Pioneers accelerator?",
         "answer": "Pioneers is an early-stage startup accelerator hosted at Station F, designed to help founders validate, build, and scale their startups through structured support, mentorship, and access to a strong entrepreneurial ecosystem."
       },
@@ -84,6 +88,48 @@
       {
         "question": "Are first-time founders preferred?",
         "answer": "First-time founders are welcome, and prior entrepreneurial experience is not a strict requirement."
+      }
+    ],
+    "team_formation": [
+      {
+        "question": "Does Pioneers help founders find co-founders?",
+        "answer": "The program may facilitate connections between founders, but specific co-founder matching services depend on cohort offerings and program structure."
+      },
+      {
+        "question": "What is the ideal team size for Pioneers?",
+        "answer": "Team size requirements vary, but most accepted teams range from solo founders to small teams of 2 or 3 people for a startup - founders should take into account that the more founders in a team the more risk of misalignment on vision, governance, and work ethic."
+      },
+      {
+        "question": "What skills should a founding team have?",
+        "answer": "Ideal founding teams typically combine technical, business, and domain expertise relevant to their startup, though specific requirements depend on the startup's focus."
+      },
+      {
+        "question": "Can I apply to Pioneers to find a co-founder?",
+        "answer": "While the program may provide networking opportunities, applicants are generally expected to have a clear startup idea and some team structure, even if incomplete."
+      },
+      {
+        "question": "Does Pioneers organize co-founder matching events?",
+        "answer": "The program may include networking events and community activities that facilitate founder connections, but specific co-founder matching events depend on cohort programming."
+      },
+      {
+        "question": "What roles are most important in a founding team?",
+        "answer": "Important roles typically include product development, business development, and domain expertise, though the specific mix depends on the startup's industry and stage."
+      },
+      {
+        "question": "Can I join Pioneers as a solo founder and build my team during the program?",
+        "answer": "Solo founders are typically welcome, and the program's community and networking opportunities may help with team building, though this varies by cohort."
+      },
+      {
+        "question": "How do I evaluate if someone would be a good co-founder?",
+        "answer": "Good co-founders typically share vision alignment, complementary skills, strong commitment, and compatible working styles, though evaluation criteria are personal to each founder."
+      },
+      {
+        "question": "Does Pioneers provide guidance on team structure and equity splits?",
+        "answer": "The program may offer workshops or mentorship on team dynamics and equity, but specific guidance depends on cohort programming and mentor availability."
+      },
+      {
+        "question": "Are there resources for finding technical or business co-founders?",
+        "answer": "The program and Station F ecosystem may provide access to networks and events where founders can connect, though specific matching resources vary by cohort."
       }
     ],
     "application_process": [

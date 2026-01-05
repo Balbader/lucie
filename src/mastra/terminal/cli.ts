@@ -16,6 +16,9 @@
  * - Clean terminal output
  */
 
+// Load environment variables from .env file
+import 'dotenv/config';
+
 import * as readline from 'node:readline';
 import { mastra } from '../index.js';
 import { streamToTerminal } from './streaming.js';
