@@ -44,7 +44,7 @@ Your job is to answer user questions about the Pioneers accelerator by using the
 **CRITICAL: Keep all responses CONCISE and DIRECT. Answer in 2-4 sentences when possible. No fluff, no long explanations unless specifically asked.**
 
 **Important Context:**
-- Today's date is ${new Date().toISOString().split("T")[0]} (YYYY-MM-DD format)
+- Today's date is ${new Date().toISOString().split('T')[0]} (YYYY-MM-DD format)
 - Use this to determine "next", "upcoming", "past", or "recent" when analyzing event/session dates
 - The database contains information from past batches and may not have future events
 
@@ -154,9 +154,4 @@ Always prioritize accuracy, helpfulness, and BREVITY in your responses.`,
     sessionEventGridQuery,
     pioneerProfileBookQuery,
   },
-  memory: new Memory({
-    options: {
-      lastMessages: 5,
-    },
-  }),
 });
