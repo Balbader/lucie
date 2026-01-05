@@ -48,7 +48,7 @@ import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
 import { loadJsonData, searchInObject, searchInText } from './data-helpers';
 
-export default createTool({
+export const sessionEventGridQuery = createTool({
 	id: 'session-event-grid-query',
 	description:
 		'Queries the session event grid database to find information about sessions, events, and activities in the accelerator. Handles general searches, specific field queries (date, speaker, type, week, participants, etc.), and aggregate queries (count, totals, etc.)',

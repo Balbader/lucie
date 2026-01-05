@@ -43,7 +43,7 @@ import { z } from 'zod';
 import { loadJsonData, searchInText } from './data-helpers';
 import { message, log } from '../../lib/print-helpers';
 
-export default createTool({
+export const generalQuestionsQuery = createTool({
 	id: 'general-questions-query',
 	description:
 		'Queries the general questions knowledge base to find answers to questions about the Pioneers accelerator program. Use simple keywords (e.g., "program", "equity", "application") or "all" to get all Q&As. The tool returns matching Q&A pairs that you can then analyze.',
