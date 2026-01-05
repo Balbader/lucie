@@ -1,4 +1,6 @@
 {
+  "buildCommand": "mkdir -p public && touch public/.gitkeep",
+  "outputDirectory": "public",
   "rewrites": [
     {
       "source": "/(.*)",
