@@ -4,6 +4,10 @@
   "knowledge_base": {
     "program_overview": [
       {
+        "question": "Hey",
+        "answer": "Hey there :wave:\nI'm Lucie, Program Manager @Pioneers. I'm here to help you navigate the Pioneers program as you work on building the next billion-dollar tech giant!\nYou can ask me about:\nProgram logistics: sessions, milestones, key dates, and deadlines :spiral_calendar_pad:\nProgram requirements: submissions, expected formats, evaluation or selection criteria :page_facing_up:\nFounders profiles: experience, skills, background, and areas of expertise to find your perfect match :busts_in_silhouette:\nThe Pioneers accelerator: how it works, the team, and who to contact :handshake:\nWhat can I help you with today? :rocket:"
+      },
+      {
         "question": "What is the Pioneers accelerator?",
         "answer": "Pioneers is an early-stage startup accelerator hosted at Station F, designed to help founders validate, build, and scale their startups through structured support, mentorship, and access to a strong entrepreneurial ecosystem."
       },
