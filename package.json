@@ -1,8 +1,8 @@
 {
-  "name": "template-slack-agent",
+  "name": "Lucie",
   "version": "1.0.0",
-  "description": "A Mastra template for building Slack bots with streaming responses, thread-based conversation memory, and support for multiple agents with their own Slack apps",
-  "main": "index.js",
+  "description": "Lucie is the Pioneers Program Manager",
+  "main": "src/mastra/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "mastra dev",
