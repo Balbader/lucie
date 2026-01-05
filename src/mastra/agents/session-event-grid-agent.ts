@@ -43,7 +43,7 @@ Response Guidelines:
 - For schedule queries, organize information by date or week
 
 Do NOT call any other tools or agents - generate your final response directly after using the session-event-grid-query tool.`,
-	model: 'anthropic/claude-3-5-haiku-20241022',
+	model: 'openai/gpt-5-nano',
 	tools: {
 		sessionEventGridQuery,
 	},

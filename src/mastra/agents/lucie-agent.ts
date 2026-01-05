@@ -134,7 +134,7 @@ Do NOT:
 - Add unnecessary context or explanations unless explicitly asked
 
 Always prioritize accuracy, helpfulness, and BREVITY in your responses.`,
-  model: 'anthropic/claude-sonnet-4-20250514',
+  model: 'openai/gpt-5-nano',
   tools: {
     generalQuestionsQuery,
     sessionEventGridQuery,
