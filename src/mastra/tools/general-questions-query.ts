@@ -40,8 +40,8 @@
 
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import { loadJsonData, searchInText } from './data-helpers.js';
-import { message, log } from '../../lib/print-helpers.js';
+import { loadJsonData, searchInText } from './data-helpers';
+import { message, log } from '../../lib/print-helpers';
 export const generalQuestionsQuery = createTool({
 	id: 'general-questions-query',
 	description:

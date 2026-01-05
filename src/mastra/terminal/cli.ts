@@ -20,8 +20,8 @@
 import 'dotenv/config';
 
 import * as readline from 'node:readline';
-import { mastra } from '../index.js';
-import { streamToTerminal } from './streaming.js';
+import { mastra } from '../index';
+import { streamToTerminal } from './streaming';
 
 // Available agents - must match keys in src/mastra/index.ts
 const availableAgents = ['lucie'];

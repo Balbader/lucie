@@ -33,8 +33,8 @@
  */
 
 import type { ChunkType } from '@mastra/core/stream';
-import type { StreamState } from './types.js';
-import { formatName } from './utils.js';
+import type { StreamState } from './types';
+import { formatName } from './utils';
 
 /**
  * Handle nested events that use template literal types

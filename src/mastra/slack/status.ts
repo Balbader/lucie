@@ -25,8 +25,8 @@
  * creating a smooth animation effect without spamming the channel.
  */
 
-import { SPINNER, TOOL_ICONS, WORKFLOW_ICONS } from './constants.js';
-import type { StreamState } from './types.js';
+import { SPINNER, TOOL_ICONS, WORKFLOW_ICONS } from './constants';
+import type { StreamState } from './types';
 
 /**
  * Format chunk type for display

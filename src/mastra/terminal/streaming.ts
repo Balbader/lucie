@@ -19,9 +19,9 @@
  */
 
 import type { Mastra } from '@mastra/core/mastra';
-import { formatName } from '../slack/utils.js';
-import { handleNestedChunkEvents } from '../slack/chunks.js';
-import type { StreamState } from '../slack/types.js';
+import { formatName } from '../slack/utils';
+import { handleNestedChunkEvents } from '../slack/chunks';
+import type { StreamState } from '../slack/types';
 
 export interface TerminalStreamingOptions {
   mastra: Mastra;

@@ -46,7 +46,7 @@
 
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import { loadJsonData, searchInObject, searchInText } from './data-helpers.js';
+import { loadJsonData, searchInObject, searchInText } from './data-helpers';
 
 export const sessionEventGridQuery = createTool({
 	id: 'session-event-grid-query',

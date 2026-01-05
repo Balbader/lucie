@@ -47,12 +47,12 @@ import {
 	ANIMATION_INTERVAL,
 	STEP_DISPLAY_DELAY,
 	TOOL_DISPLAY_DELAY,
-} from './constants.js';
-import { getStatusText } from './status.js';
-import { formatName, sleep } from './utils.js';
-import type { StreamingOptions, StreamState } from './types.js';
+} from './constants';
+import { getStatusText } from './status';
+import { formatName, sleep } from './utils';
+import type { StreamingOptions, StreamState } from './types';
 
-export type { StreamingOptions } from './types.js';
+export type { StreamingOptions } from './types';
 
 /**
  * Stream agent response to Slack with animated status updates
