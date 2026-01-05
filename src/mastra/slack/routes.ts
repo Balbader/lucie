@@ -1,7 +1,7 @@
 import { registerApiRoute } from '@mastra/core/server';
 import { WebClient } from '@slack/web-api';
-import { verifySlackRequest } from './verify';
-import { streamToSlack } from './streaming';
+import { verifySlackRequest } from './verify.js';
+import { streamToSlack } from './streaming.js';
 
 /**
  * Configuration for a single Slack app
