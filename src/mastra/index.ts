@@ -31,31 +31,32 @@ import { Mastra } from '@mastra/core/mastra';
 import { LibSQLStore } from '@mastra/libsql';
 import { lucie } from './agents/lucie-agent';
 import { slackRoutes } from './slack/routes';
+import { VercelDeployer } from '@mastra/deployer-vercel';
 
 export const mastra = new Mastra({
-	// Registered agents - keys must match agentName in slack/routes.ts
-	agents: {
-		lucie,
-	},
+  // Registered agents - keys must match agentName in slack/routes.ts
+  agents: {
+    lucie,
+  },
 
-	// Registered workflows - available to agents via their workflows config
-	workflows: {},
+  // Registered workflows - available to agents via their workflows config
+  workflows: {},
 
-	// Local SQLite storage for conversation memory and agent state
-	storage: new LibSQLStore({
-		id: 'mastra',
-		url: 'file:./mastra.db',
-	}),
+  // Local SQLite storage for conversation memory and agent state
+  storage: new LibSQLStore({
+    id: 'mastra',
+    url: 'file:./mastra.db',
+  }),
 
-	// API server configuration with Slack webhook routes
-	server: {
-		apiRoutes: slackRoutes,
-	},
+  // API server configuration with Slack webhook routes
+  server: {
+    apiRoutes: slackRoutes,
+  },
 
-	// todo: add vercel deployer
+  deployer: new VercelDeployer(),
 
-	// Bundler configuration to prevent module resolution issues
-	bundler: {
-		externals: ['supports-color'],
-	},
+  // Bundler configuration to prevent module resolution issues
+  bundler: {
+    externals: ['supports-color'],
+  },
 });
