@@ -57,8 +57,6 @@ export const mastra = new Mastra({
 
   deployer: new VercelDeployer({
     maxDuration: 600,
-    memory: 1536,
-    regions: ['sfo1'],
   }),
 
   // Bundler configuration to prevent module resolution issues
