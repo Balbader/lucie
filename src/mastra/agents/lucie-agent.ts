@@ -28,9 +28,9 @@
  */
 
 import { Agent } from '@mastra/core/agent';
-import { generalQuestionsQuery } from '../tools/general-questions-query';
-import { sessionEventGridQuery } from '../tools/session-event-grid-query';
-import { pioneerProfileBookQuery } from '../tools/pioneer-profile-book-query';
+import { generalQuestionsQuery } from '../tools/general-questions-query.js';
+import { sessionEventGridQuery } from '../tools/session-event-grid-query.js';
+import { pioneerProfileBookQuery } from '../tools/pioneer-profile-book-query.js';
 
 export const lucie = new Agent({
   id: 'lucie-agent',

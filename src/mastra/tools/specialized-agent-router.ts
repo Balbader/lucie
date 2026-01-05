@@ -143,11 +143,7 @@ export const specializedAgentRouter = createTool({
 
 		// Get the specialized agent from the mastra instance
 		const specializedAgent = mastra.getAgent(
-			mapping.agentName as
-				| 'lucie'
-				| 'generalQuestionsAgent'
-				| 'pioneerProfileBookAgent'
-				| 'sessionEventGridAgent',
+			mapping.agentName as 'lucie',
 		);
 
 		if (!specializedAgent) {
