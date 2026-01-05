@@ -53,6 +53,12 @@ export const mastra = new Mastra({
     apiRoutes: slackRoutes,
   },
 
+  deployer: new VercelDeployer({
+    maxDuration: 600,
+    memory: 1536,
+    regions: ['sfo1', 'iad1'],
+  }),
+
   // Bundler configuration to prevent module resolution issues
   bundler: {
     externals: ['supports-color'],
