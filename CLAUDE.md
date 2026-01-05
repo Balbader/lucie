@@ -58,9 +58,10 @@ When deploying to Vercel:
 5. After deployment, update Slack app Event Subscriptions URL to `https://your-app.vercel.app/slack/lucie/events`
 
 **Important:**
-- The `api/index.ts` exports `mastra.server.getApp().fetch` which is compatible with Vercel's Web Standard API
+- The `api/index.ts` exports an async handler compatible with Vercel's Web Standard API
 - All routes are rewritten to go through the serverless function
 - Vercel handles compilation and bundling automatically - no custom build command needed
+- **Memory Limitation:** On Vercel, the app uses an in-memory database (`:memory:`), so conversation memory does NOT persist between serverless function cold starts. For persistent memory, consider using Turso (cloud LibSQL) or another hosted database solution.
 
 ## Project Structure
 
@@ -374,9 +375,11 @@ Status display logic in `src/mastra/slack/status.ts` uses these states to show c
 - Built output includes compiled agents, tools, and routes
 
 **Database:**
-- LibSQL (SQLite) database at `./mastra.db`
+- LibSQL (SQLite) database at `./mastra.db` (local development)
+- In Vercel deployment: uses in-memory database (`:memory:`) due to read-only filesystem
 - Stores conversation memory and thread context
-- Can be deleted to reset all memory state
+- Local: Can be deleted to reset all memory state
+- Vercel: Memory resets on each cold start (does not persist between function invocations)
 - Conversation context keyed by `threadId` and `resourceId`
 
 ## Important Notes
